@@ -27,7 +27,7 @@ def select_data(dfs):
     outlet_ = st.selectbox("Select Outlet", options=out.iloc[:, 3].unique())
     out = out[out[col[3]]==outlet_]
 
-    products = st.multiselect("Select Products", options=list(df.columns[7:]),
-                                                 default=list(df.columns[7:]))
+    # products = st.multiselect("Select Products", options=list(df.columns[7:]),
+    #                                              default=list(df.columns[7:]))
 
-    return df, out, col, products
+    return df, out, col #, products
