@@ -1,0 +1,5 @@
+streamlit
+pycaret[full]
+pandas-profiling
+streamlit-pandas-profiling
+plotly
