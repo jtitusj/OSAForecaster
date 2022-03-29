@@ -2,12 +2,20 @@ import numpy as np
 import pandas as pd
 
 
+def format_column_names(df):
+    cols = ["YEAR", "MONTH", "WEEK", "AREA", "GROUP", "ACCOUNT", "OUTLET"]
+    cols_df = list(df.columns[:len(cols)])
+    return df.rename(columns=dict(zip(cols_df, cols)))
+
 def format_invalid_data(df):
     cols = list(df.columns[7:])
 
     def mapToNan(n):
-        if not str(n).isnumeric():
+        if str(n).isnumeric():
+            return n
+        else:
             return np.NaN
+
     for col in cols:
         df[col] = df[col].map(mapToNan)
 
