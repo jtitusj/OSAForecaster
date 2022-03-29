@@ -15,6 +15,5 @@ def load_file(data_file, file_type):
 
         return df_mt, df_rmt
 
-@st.cache
 def get_outlet_data(df):
     return df.groupby(list(df.columns[3:7])).count().reset_index().iloc[:, :4]    
