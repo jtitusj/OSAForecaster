@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 
+from preprocessing import preprocess
+
 
 def upload_file(file_type="xlsx"):
     return st.file_uploader("Upload csv file", type=file_type)
@@ -10,8 +12,8 @@ def load_file(data_file, file_type):
     if data_file is not None:
         if file_type=="xlsx":
             excel_file = pd.ExcelFile(data_file)
-            df_mt = pd.read_excel(excel_file, sheet_name="MT OSA")
-            df_rmt = pd.read_excel(excel_file, sheet_name="RMT OSA")
+            df_mt = preprocess(pd.read_excel(excel_file, sheet_name="MT OSA"))
+            df_rmt = preprocess(pd.read_excel(excel_file, sheet_name="RMT OSA"))
 
         return df_mt, df_rmt
 
