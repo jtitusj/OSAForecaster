@@ -2,9 +2,11 @@ import streamlit as st
 import pandas as pd
 
 
-# upload csv file
 def upload_file(file_type="xlsx"):
-    data_file = st.file_uploader("Upload csv file", type=file_type)
+    return st.file_uploader("Upload csv file", type=file_type)
+    
+@st.cache
+def load_file(data_file, file_type):
     if data_file is not None:
         if file_type=="xlsx":
             excel_file = pd.ExcelFile(data_file)
@@ -13,5 +15,6 @@ def upload_file(file_type="xlsx"):
 
         return df_mt, df_rmt
 
+@st.cache
 def get_outlet_data(df):
     return df.groupby(list(df.columns[3:7])).count().reset_index().iloc[:, :4]    
