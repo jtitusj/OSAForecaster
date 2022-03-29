@@ -1,14 +1,24 @@
 import streamlit as st
 
-from preprocessing import format_column_names, format_invalid_data
+from preprocessing import format_column_names, format_invalid_data, format_week
 from utils import get_outlet_data
 
-def select_data(df):
-    df = format_column_names(df)
-    df = format_invalid_data(df)
+def select_data(dfs):
+    dataset = st.selectbox("Select Source", options=['MT', "RMT"])  
+    df = None
+
+    if dataset == "MT":
+        df = dfs[0]
+    else: 
+        df = dfs[1] 
+
+    # preprocess
+    df_ = format_column_names(df)
+    df_['WEEK'] = format_week(df_['WEEK'])
+    df_ = format_invalid_data(df_)
 
     # outlet data
-    outlet = get_outlet_data(df)
+    outlet = get_outlet_data(df_)
     out = outlet.copy()
     col = out.columns
 
@@ -24,4 +34,4 @@ def select_data(df):
     outlet_ = st.selectbox("Select Outlet", options=out.iloc[:, 3].unique())
     out = out[out[col[3]]==outlet_]
 
-    return df, out, col
+    return df_, out, col
