@@ -5,7 +5,7 @@ import pandas as pd
 def upload_file(file_type="xlsx"):
     return st.file_uploader("Upload csv file", type=file_type)
     
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_file(data_file, file_type):
     if data_file is not None:
         if file_type=="xlsx":
