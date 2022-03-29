@@ -2,10 +2,9 @@ import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
 
-from plotly.subplots import make_subplots
-
 from utils import upload_file, load_file
 from sidebar import select_data
+from plots import plot_osa
 
 st.set_page_config(layout="wide")
 
@@ -38,19 +37,7 @@ if dataframes is not None:
     products = st.multiselect("Select Product(s)", options=list(df.columns[7:]),
                                                    default=list(df.columns[7:]))
     
-    fig = make_subplots(rows=len(products), cols=1, shared_xaxes=True,
-                                                    vertical_spacing=0.025)
-    for i in range(len(products)):
-        obj = go.Scatter(
-            x = time,
-            y = outlet_data[products[i]],
-            mode = 'markers',
-            name = products[i]
-        )
-
-        fig.add_trace(obj, row=i+1, col=1)
-    
-    fig.update_layout(height=200*len(products), yaxis_range=[-.05, 7.5])
+    fig = plot_osa(products, time, outlet_data)    
 
     st.plotly_chart(fig, use_container_width=True)
 else:

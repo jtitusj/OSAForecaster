@@ -2,39 +2,21 @@ import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 
+from plotly.subplots import make_subplots
 
-def show_demand_plot(df, col_date, col_ts):
-    fig = go.Figure()
+def plot_osa(products, time, outlet_data):
+    fig = make_subplots(rows=len(products), cols=1, shared_xaxes=True,
+                                                    vertical_spacing=0.025)
+    for i in range(len(products)):
+        obj = go.Scatter(
+            x = time,
+            y = outlet_data[products[i]],
+            mode = 'markers',
+            name = products[i]
+        )
 
-    obj_main = go.Scatter(
-        x = df[col_date],
-        y = df[col_ts],
-        mode = 'lines',
-        name = 'demand'
-    )
+        fig.add_trace(obj, row=i+1, col=1)
+    
+    fig.update_layout(height=200*len(products), yaxis_range=[-.05, 7.5])
 
-    # moving average
-    window = st.number_input("Input window size for moving average", min_value=0, value=0)
-    df_ma = df.set_index('date').rolling(window).mean().dropna().reset_index()
-    obj_ma = go.Scatter(
-        x = df_ma[col_date],
-        y = df_ma[col_ts],
-        mode = 'lines',
-        name = f'ma({window})'
-    )
-
-    fig.add_trace(obj_main)
-    fig.add_trace(obj_ma)
-
-    fig.update_layout(
-        title=f"Sales/Demand for {col_ts}",
-        xaxis_title="Date",
-        yaxis_title="Demand",
-        legend_title="Legend",
-        # font=dict(
-        #     family="Courier New, monospace",
-        #     size=18,
-        #     color="RebeccaPurple"
-        # )
-    )
-    st.plotly_chart(fig, use_container_width=True)
+    return fig
