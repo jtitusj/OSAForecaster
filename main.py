@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 
 from utils import upload_file, load_file
 from sidebar import select_data, use_select_filter
-from plots import plot_osa
+from plots import plot_osa, plot_offtake
 
 st.set_page_config(layout="wide")
 
@@ -48,11 +48,19 @@ if osa_data is not None and offtake_data is not None:
         st.write(outlet_offtake_data.style.format(precision=2, na_rep='NA'))
 
     st.header("Plots")
-    products = st.multiselect("Select Product(s)", options=list(df_osa.columns[7:]),
-                                                   default=list(df_osa.columns[7:]))
     
     with st.expander("Show OSA Plots", expanded=False):
-        fig = plot_osa(products, time, outlet_osa_data)    
-        st.plotly_chart(fig, use_container_width=True)
+        products_osa = st.multiselect("Select Product(s)", options=list(df_osa.columns[7:]),
+                                                    default=list(df_osa.columns[7:]),
+                                                    key="osa")
+        fig_osa = plot_osa(products_osa, time, outlet_osa_data)    
+        st.plotly_chart(fig_osa, use_container_width=True)
+
+    with st.expander("Show Offtake Plots", expanded=False):
+        products_off = st.multiselect("Select Product(s)", options=list(df_offtake.columns[7:]),
+                                                   default=list(df_offtake.columns[7:]), 
+                                                   key="offtake")
+        fig_offtake = plot_offtake(products_off, time, outlet_offtake_data)    
+        st.plotly_chart(fig_offtake, use_container_width=True)
 else:
     st.write("Please upload a dataset in the left sidebar.")
