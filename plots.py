@@ -8,10 +8,12 @@ def plot_osa(products, time, outlet_data):
     fig = make_subplots(rows=len(products), cols=1, shared_xaxes=True,
                                                     vertical_spacing=0.025)
     for i in range(len(products)):
-        obj = go.Scatter(
+        obj = go.Bar(
             x = time,
             y = outlet_data[products[i]],
-            mode = 'markers',
+            # mode = 'markers',
+            width = .5,
+            opacity = .7,
             name = products[i]
         )
 
