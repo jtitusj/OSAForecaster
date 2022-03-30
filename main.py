@@ -4,7 +4,7 @@ import numpy as np
 import plotly.graph_objects as go
 
 from utils import upload_file, load_file
-from sidebar import select_data
+from sidebar import select_data, use_select_filter
 from plots import plot_osa
 
 st.set_page_config(layout="wide")
@@ -30,22 +30,29 @@ if osa_data is not None and offtake_data is not None:
     with st.sidebar.expander("Filter", expanded=True):
         df_osa, df_offtake, out, cols = select_data(osa_data, offtake_data)
 
-    filters = np.all([df_osa[col]==out[col].values[0] for col in cols], axis=0)
-    outlet_data = df_osa[filters].sort_values(by=['YEAR', 'WEEK'])
+    osa_filter = use_select_filter(df_osa, out, cols)
+    outlet_osa_data = df_osa[osa_filter].sort_values(by=['YEAR', 'WEEK'])
 
-    time = outlet_data["YEAR"].astype(str) + ', Week ' + outlet_data["WEEK"].astype(str)
+    offtake_filter = use_select_filter(df_offtake, out, cols)
+    outlet_offtake_data = df_offtake[offtake_filter].sort_values(by=['YEAR', 'WEEK'])
+
+    time = (outlet_osa_data["YEAR"].astype(str) +
+            ', Week ' +
+            outlet_osa_data["WEEK"].astype(str))
 
     st.header("Data Overview")
-    with st.expander("Show Dataset", expanded=False):
-        # st.write(outlet_data.loc[:, ['YEAR', 'MONTH', 'WEEK', 'OUTLET'] + products])
-        st.write(outlet_data)
+    with st.expander("Show OSA Dataset", expanded=False):
+        st.write(outlet_osa_data.style.format(precision=0, na_rep='NA'))
 
-    st.header("On-Shelf Availability Plots")
+    with st.expander("Show Offtake Dataset", expanded=False):
+        st.write(outlet_offtake_data.style.format(precision=2, na_rep='NA'))
+
+    st.header("Plots")
     products = st.multiselect("Select Product(s)", options=list(df_osa.columns[7:]),
                                                    default=list(df_osa.columns[7:]))
     
-    with st.expander("Show Plots", expanded=False):
-        fig = plot_osa(products, time, outlet_data)    
+    with st.expander("Show OSA Plots", expanded=False):
+        fig = plot_osa(products, time, outlet_osa_data)    
         st.plotly_chart(fig, use_container_width=True)
 else:
     st.write("Please upload a dataset in the left sidebar.")
