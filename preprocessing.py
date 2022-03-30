@@ -21,7 +21,7 @@ def remove_total_row(df):
     return df[df["OUTLET"] != "TOTAL"]
 
 def format_year_column(year):
-    return df["YEAR"].astype(int)
+    return year.astype(int)
 
 def format_week_column(week):
     return week.map(lambda x: int(str(x).split(" ")[-1]))
