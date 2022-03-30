@@ -4,16 +4,18 @@ import pandas as pd
 from preprocessing import preprocess
 
 
-def upload_file(file_type="xlsx"):
-    return st.file_uploader("Upload csv file", type=file_type)
+def upload_file(title, file_type="xlsx"):
+    return st.file_uploader(title, type=file_type)
     
 @st.cache(allow_output_mutation=True)
-def load_file(data_file, file_type):
+def load_file(data_file, file_type, data_source):
     if data_file is not None:
         if file_type=="xlsx":
             excel_file = pd.ExcelFile(data_file)
-            df_mt = preprocess(pd.read_excel(excel_file, sheet_name="MT OSA"))
-            df_rmt = preprocess(pd.read_excel(excel_file, sheet_name="RMT OSA"))
+            df_mt = preprocess(pd.read_excel(excel_file,
+                                             sheet_name=f"MT {data_source}"))
+            df_rmt = preprocess(pd.read_excel(excel_file,
+                                              sheet_name=f"RMT {data_source}"))
 
         return df_mt, df_rmt
 
