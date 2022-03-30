@@ -20,4 +20,4 @@ def load_file(data_file, file_type, data_source):
         return df_mt, df_rmt
 
 def get_outlet_data(df):
-    return df.groupby(list(df.columns[3:7])).count().reset_index().iloc[:, :4]    
+    return df.groupby(list(df.columns[3:7])).count().reset_index().iloc[:, :4]
