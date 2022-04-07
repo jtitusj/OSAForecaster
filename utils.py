@@ -13,9 +13,11 @@ def load_file(data_file, file_type, data_source):
         if file_type=="xlsx":
             excel_file = pd.ExcelFile(data_file)
             df_mt = preprocess(pd.read_excel(excel_file,
-                                             sheet_name=f"MT {data_source}"))
+                                             sheet_name=f"MT {data_source}",
+                                             na_values=['NR', '-', 'NC', 'NF']))
             df_rmt = preprocess(pd.read_excel(excel_file,
-                                              sheet_name=f"RMT {data_source}"))
+                                              sheet_name=f"RMT {data_source}",
+                                              na_values=['NR', '-', 'NC', 'NF']))
 
         return df_mt, df_rmt
 

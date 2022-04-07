@@ -7,7 +7,6 @@ def preprocess(df):
     df = remove_total_row(df)
     df['YEAR'] = format_year_column(df['YEAR'])
     df['WEEK'] = format_week_column(df['WEEK'])
-    df = format_invalid_data(df)
 
     return df
 
@@ -25,15 +24,3 @@ def format_year_column(year):
 
 def format_week_column(week):
     return week.map(lambda x: int(str(x).split(" ")[-1]))
-
-def format_invalid_data(df):
-    def map_to_numeric(n):
-        if n in ['NR', '-', 'NC', 'NF']:
-            return np.NaN   
-        else:
-            return float(n)
-        
-    for col in df.columns[7:]:
-        df[col] = df[col].map(map_to_numeric)
-    
-    return df
