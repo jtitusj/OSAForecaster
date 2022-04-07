@@ -2,10 +2,11 @@ from typing_extensions import dataclass_transform
 import streamlit as st
 import numpy as np
 import plotly.graph_objects as go
+import plotly.express as px
 
 from utils import upload_file, load_file
 from sidebar import select_data, use_select_filter
-from plots import plot_osa, plot_offtake
+from plots import plot_osa, plot_offtake, plot_osa_heatmap
 
 st.set_page_config(layout="wide")
 
@@ -50,11 +51,14 @@ if osa_data is not None and offtake_data is not None:
     st.header("Plots")
     
     with st.expander("Show OSA Plots", expanded=False):
-        products_osa = st.multiselect("Select Product(s)", options=list(df_osa.columns[7:]),
-                                                    default=list(df_osa.columns[7:]),
-                                                    key="osa")
-        fig_osa = plot_osa(products_osa, time, outlet_osa_data)    
-        st.plotly_chart(fig_osa, use_container_width=True)
+        # products_osa = st.multiselect("Select Product(s)", options=list(df_osa.columns[7:]),
+        #                                             default=list(df_osa.columns[7:]),
+        #                                             key="osa")
+        # fig_osa = plot_osa(products_osa, time, outlet_osa_data)    
+        # st.plotly_chart(fig_osa, use_container_width=True)
+
+        fig_ = plot_osa_heatmap(outlet_osa_data)
+        st.plotly_chart(fig_, use_container_width=True)
 
     with st.expander("Show Offtake Plots", expanded=False):
         products_off = st.multiselect("Select Product(s)", options=list(df_offtake.columns[7:]),
