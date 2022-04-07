@@ -28,10 +28,10 @@ def format_week_column(week):
 
 def format_invalid_data(df):
     def map_to_numeric(n):
-        if str(n).isnumeric():
-            return int(n)
+        if n in ['NR', '-', 'NC', 'NF']:
+            return np.NaN   
         else:
-            return np.NaN
+            return float(n)
         
     for col in df.columns[7:]:
         df[col] = df[col].map(map_to_numeric)
