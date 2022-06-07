@@ -179,7 +179,7 @@ products = [
     'Locally Ripe Mango 1L Tetra Pack (512)',
     'UFC Golden Fiesta Canola 1L SUP (553)']
 
-nc_cols = ['NR', 'NC', 'NF', '-']
+nc_cols = ['NR', 'NC', 'NF', '-', -1]
 
 info_cols = ['YEAR', 'MONTH', 'WEEK', 'AREA', 'GROUP', 'ACCOUNT', 'OUTLET']
 
@@ -201,3 +201,23 @@ def compute_osa(df):
     df_osa['OSA'] = osa
 
     return df_osa
+
+
+def compute_osa_2(df):
+    new_products = set(products).intersection(df.columns)
+    df_products = df[new_products].copy()
+    not_carried_count = df_products.isin(nc_cols).sum(axis=1)
+    total_carried_count = len(products) - not_carried_count
+
+    # set non-numeric values to NaN
+    df_products[df[new_products].isin(nc_cols)] = np.NaN
+
+    # convert all entries to float
+    df_products = df_products.astype(float)
+
+    osa = (df_products.sum(axis=1).div(total_carried_count) / 7)
+
+    
+    df['OSA'] = osa.values
+
+    return df
